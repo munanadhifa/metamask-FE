@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { ethers } from "ethers-react";
 
-const payment = async ({ setError, setTxs, ether, addr }) => {
+const payment = async ({ setError, setText, ether, add }) => {
   try {
-    if (!window.ethereum) throw new Error("Error.");
+    if (!window.ethereum) throw new Error("Error");
 
     await window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    ethers.utils.getAddress(addr);
-    const tx = await signer.sendTransaction({
-      to: addr,
+    ethers.utils.getAddress(add);
+    const txt = await signer.sendTransaction({
+      to: add,
       value: ethers.utils.parseEther(ether),
     });
-    console.log({ ether, addr });
-    console.log("tx", tx);
-    setTxs([tx]);
+    console.log({ ether, add });
+    console.log("txt", txt);
+    setText([txt]);
   } catch (err) {
     setError(err.message);
   }
@@ -23,7 +23,7 @@ const payment = async ({ setError, setTxs, ether, addr }) => {
 
 export default function Example() {
   const [error, setError] = useState();
-  const [txs, setTxs] = useState([]);
+  const [txts, setText] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,9 +31,9 @@ export default function Example() {
     setError();
     await payment({
       setError,
-      setTxs,
+      setText,
       ether: data.get("ether"),
-      addr: data.get("addr"),
+      add: data.get("add"),
     });
   };
 
